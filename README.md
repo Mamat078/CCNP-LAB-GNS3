@@ -1,80 +1,104 @@
-# CCNP-LAB-GNS3
-This GNS3 lab demonstrates advanced CCNP-level networking skills with multi-protocol routing (OSPF, EIGRP, BGP), redistribution, spanning-tree design, and BGP path manipulation. It also explores beyond CCNP scope with IPsec VPN and MPLS backbone integration.
+# 📡 CCNP GNS3 LAB – Multi-Domain Network Scenario  
 
-CCNP GNS3 LAB – Multi-Domain Network Scenario
+This GNS3 lab demonstrates **advanced CCNP-level networking skills** with:  
+- Multi-protocol routing (OSPF, EIGRP, BGP)  
+- Route redistribution & path manipulation  
+- Spanning-tree design (MSTP, PVST+)  
+- BGP attributes & communities  
+- Plus beyond CCNP scope: **VPN IPsec** & **MPLS backbone**  
 
-This repository documents a complete GNS3 lab project built to validate and showcase CCNP-level networking skills and extend them with VPN IPsec and MPLS.
-Each section corresponds to a key configuration step, with explanations and configs provided.
+---
 
-🔹 1. OSPF / EIGRP Interzone
+## 🗂️ Repository Overview  
+This repository documents a complete GNS3 lab project.  
+Each section corresponds to a key configuration step, with explanations and configs provided.  
 
-Redistribution between OSPF and EIGRP domains.
-Higher EIGRP metric configured to prefer OSPF as the default routing path.
+---
 
-🔹 2. OSPF Multi-Area Design
+## 🖼️ Network Topology  
+The following diagram represents the global lab infrastructure:  
 
-Areas 0, 10, and 20 deployed with backup links between R9 ↔ R8.
-Default route originated on R2 and R8, with R2 using a lower metric to ensure primary path selection.
+![Network Topology](CCNP%20DRAWING%20PROJECT.png)  
 
-🔹 3. BGP Inter-AS Configuration
+---
 
-Multiple AS domains (65100, 65200, 65300).
-Routes exchanged between ASes through eBGP sessions.
+## 🔹 Lab Sections  
 
-🔹 4. BGP Path Selection Tuning
+### 1. OSPF / EIGRP Interzone  
+- Redistribution between OSPF and EIGRP domains.  
+- Higher EIGRP metric configured → OSPF preferred as default path.  
 
-Implementation of Local Preference and MED to influence routing decisions.
-Example: AS65200 traffic prefers R2 as entry point (higher LP), backup via R8.
+### 2. OSPF Multi-Area Design  
+- Areas **0, 10, 20** deployed with backup links **R9 ↔ R8**.  
+- Default route originated on **R2** and **R8**, with R2 preferred.  
 
-🔹 5. BGP Communities & Advanced Attributes
+### 3. BGP Inter-AS Configuration  
+- Multiple AS domains: **65100, 65200, 65300**.  
+- Routes exchanged between ASes via eBGP sessions.  
 
-Use of communities to define Internet-bound preferences:
-Traffic to AS65200 → via R1
-Traffic to AS65300 → via R7
-Application of Weight on border routers to demonstrate in-depth Cisco path manipulation.
+### 4. BGP Path Selection Tuning  
+- **Local Preference** & **MED** influence routing.  
+- Example: AS65200 → prefers R2 (higher LP), backup via R8.  
 
-🔹 6. LAN Switching – MSTP & PVST+
+### 5. BGP Communities & Advanced Attributes  
+- Communities define Internet-bound preferences:  
+  - Traffic to **AS65200 → R1**  
+  - Traffic to **AS65300 → R7**  
+- **Weight** used on border routers to refine Cisco path control.  
 
-MSTP deployed in the Spain LAN.
-PVST+ integrated for redundancy and per-VLAN spanning-tree.
+### 6. LAN Switching – MSTP & PVST+  
+- **MSTP** deployed in Spain LAN.  
+- **PVST+** for redundancy & per-VLAN spanning-tree.  
 
-🔹 7. VPN IPsec (France ↔ Canada/US)
+### 7. VPN IPsec (France ↔ Canada/US)  
+- Site-to-Site tunnels between remote branches.  
+- **IKEv2, encryption policies, SLA tracking**.  
 
-Site-to-Site IPsec tunnels between remote branches.
-IKEv2, encryption policies, and SLA tracking for tunnel stability.
+### 8. MPLS VPN Backbone  
+- MPLS between **Main Branch ↔ Datacenter ↔ Spain LAN**.  
+- VRF isolation & PE-CE connectivity simulated.  
 
-🔹 8. MPLS VPN Backbone
+---
 
-MPLS between Main Branch ↔ Datacenter ↔ Spain LAN.
-VRF isolation and PE-CE connectivity simulated.
+## 🎯 Skills Highlighted  
+✔ Multi-protocol routing (OSPF, EIGRP, BGP)  
+✔ Route redistribution & path-control advanced techniques  
+✔ LAN switching with MSTP / PVST+  
+✔ VPN IPsec configuration  
+✔ MPLS VPN introduction  
+✔ Network automation with Python & Ansible  
 
-🔹 9. Automation (Other Repos In progress)
+---
 
-CLI automation examples available in dedicated repos:
-Python (Netmiko / NAPALM)
-Ansible Playbooks
-Check profile for links to automation labs.
+## 📌 Next Steps / In Progress  
 
-🎯 Skills Highlighted
+- **Beyond CCNP Scope**  
+  - **MPLS VPNs**: continuing refinement of PE-CE connectivity and VRF isolation.  
+  - **VPN IPsec**: extending site-to-site security, testing IKEv2 & SLA failover scenarios.  
 
-Multi-protocol routing (OSPF, EIGRP, BGP)
-Route redistribution & path-control techniques
-LAN switching with MSTP / PVST+
-VPN IPsec configuration
+- **Automation (Work in Progress)**  
+  - Only **basic automation configs** available in Python for now.  
+  - See repo 👉 [Python Networking Lab](https://github.com/Mamat078/python-networking-lab)  
+  - Planned: expand to **Ansible playbooks** and more advanced automation use-cases.  
 
+- **Configurations Documentation**  
+  - A dedicated `/configs/` folder will include:  
+    - Step-by-step configs  
+    - Verification commands (`show`, `debug`)  
+    - Explanations  
 
-🚀 Future Work
+---
 
-QoS for Real-Time Traffic
-Implement basic VoIP QoS policies (class-map, policy-map, priority queuing).
-Validate with simulated traffic flows to ensure low latency and jitter.
-Showcase automated deployment of QoS configs using Python/Netmiko and Ansible playbooks.
-VRF-Lite Expansion
-Segment customer/department traffic via VRF-lite.
-Combine with existing MPLS backbone to simulate multi-tenant design.
-Automation Pipelines (CI/CD)
-GitHub Actions for linting configs (Black/Ruff for Python).
-Automated push of configs to lab via Ansible.
-Integrate testing with pyATS or Nornir for config validation.
-MPLS VPN introduction
-Network automation with Python & Ansible
+## 🚀 Future Work  
+- **QoS for Real-Time Traffic**  
+  - Basic VoIP QoS policies (class-map, policy-map, priority queuing)  
+  - Automated deployment via Python/Netmiko & Ansible  
+
+- **VRF-Lite Expansion**  
+  - Segmentation of customer/department traffic  
+  - Combine with MPLS backbone for multi-tenant design  
+
+- **Automation Pipelines (CI/CD)**  
+  - GitHub Actions for linting configs (Black/Ruff for Python)  
+  - Automated pushes via Ansible  
+  - Testing with **pyATS** / **Nornir**  
