@@ -41,10 +41,40 @@ The following diagram represents the global lab infrastructure:
 - Example: AS65200 → prefers R2 (higher LP), backup via R8.  
 
 ### 5. BGP Communities & Advanced Attributes  
-- Communities define Internet-bound preferences:  
-  - Traffic to **AS65200 → R1**  
-  - Traffic to **AS65300 → R7**  
-- **Weight** used on border routers to refine Cisco path control.  
+
+BGP communities are used as a **scalable tagging mechanism** to classify routes, then apply policies at border routers.  
+This avoids hardcoding policies on individual prefixes and allows consistent enforcement across the network.  
+
+**Example implementation in the lab:**  
+
+- **On R3 (AS65300)** → routes from R1 are tagged:  
+```cisco
+route-map TAG-DTC-65100 permit 10
+ match ip address prefix-list TO-DATACENTER-65100
+ set community 65300:65100 
+ 
+Communities are then propagated with send-community to iBGP peers.
+On R14 → policies match the tagged routes and apply attributes:
+
+```cisco
+ip community-list standard DTC permit 65300:65100
+!
+route-map TO-DTC-65100 permit 10
+ match community DTC
+ set local-preference 111
+ 
+Why use communities?
+Simplifies configuration:
+
+All “Datacenter-bound” prefixes are tagged 65300:65100.
+Border routers simply match the tag and apply LP/Weight accordingly.
+Ensures consistent policy enforcement across multiple routers and domains.
+Provides scalability: adding new prefixes does not require updating every border router policy, only tagging them once.
+Attributes combined with communities
+Weight → Cisco-specific, local to a router; used for fine-tuning on edge routers.
+Local Preference → AS-wide decision; propagated via iBGP amd can be extended to other BGP.
+
+Communities → decide which routes receive which attributes, enabling flexible and scalable routing control.
 
 ### 6. LAN Switching – MSTP & PVST+  
 - **MSTP** deployed in Spain LAN.  
@@ -61,13 +91,13 @@ The following diagram represents the global lab infrastructure:
 ---
 
 ## 🎯 Skills Highlighted  
-✔ Multi-protocol routing (OSPF, EIGRP, BGP)  
-✔ Route redistribution & path-control advanced techniques  
-✔ LAN switching with MSTP / PVST+  
-✔ VPN IPsec configuration  
-✔ MPLS VPN introduction  
-✔ Network automation with Python & Ansible  
-
+✔ Multi-protocol routing (OSPF, EIGRP, BGP)
+✔ Advanced BGP path control with Local Pref, MED, Weight & Communities
+✔ Scalable routing policies via tagging (ASN:VALUE, additive communities)
+✔ LAN switching with MSTP / PVST+
+✔ VPN IPsec configuration
+✔ MPLS VPN introduction
+✔ Network automation with Python & Ansible
 ---
 
 ## 📌 Next Steps / In Progress  
